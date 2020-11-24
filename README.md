@@ -45,18 +45,9 @@ source ./venv/bin/activate
 pip install -r server/requirements.txt
 
 # run service
-python server/main.py
+python manage.py runserver 192.168.1.70:8001
 ```
-The service should be available at http://0.0.0.0:8001 and exposes the following endpoints:
-```
-/parents
-/parents/{parent_id}
-/parents/{parent_id}/children
-/siblings
-/siblings/{sibling_id}
-/children
-/children/{child_id}
-```
+
 
 ### Configure minimal required settings for Keycloak JWT validation
 
@@ -86,13 +77,13 @@ Steps:
     - go to Role Mappings:
         - add 'test-app-parent' to `Assigned Roles`
 6. Using Postman, create a new GET request to, say, localhost:8402/mock/parents/51768a34-938f-4309-923d-fe95251d23b6 and get an OAuth2 token to use with it:
-    - Note: using info from [http://localhost:8403/auth/realms/master/.well-known/openid-configuration](http://localhost:8403/auth/realms/master/.well-known/openid-configuration)
+    - Note: using info from [http://localhost:8403/auth/realms/test_realm/.well-known/openid-configuration](http://localhost:8403/auth/realms/test_realm/.well-known/openid-configuration)
     - select Auth Type to Oauth 2.0 and fill in the following:
         - token name: `keycloak-token`
         - grant type: `Authorization code`
         - callback url: `http://localhost:8402/mock/whatever`
-        - auth url: `http://localhost:8403/auth/realms/master/protocol/openid-connect/auth`
-        - access token url: `http://localhost:8403/auth/realms/master/protocol/openid-connect/token`
+        - auth url: `http://localhost:8403/auth/realms/test_realm/protocol/openid-connect/auth`
+        - access token url: `http://localhost:8403/auth/realms/test_realm/protocol/openid-connect/token`
         - client id: `krakend-api-gateway`
         - client secret: (get from Clients/Krakend-api-gateway/Credentials)
         - scope: `openid`
