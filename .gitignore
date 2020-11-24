@@ -4,4 +4,4 @@ venv
 backup
 .history
 .python-version
-
+.idea

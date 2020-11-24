@@ -8,21 +8,6 @@ volumes:
   keycloak-db:
 
 services:
-  krakend:
-    image: devopsfaith/krakend:latest
-    container_name: krakend
-    command: run -d -c /etc/krakend/krakend.json
-    ports:
-      - "8402:8080"
-    volumes:
-      - ./data/krakend:/etc/krakend
-
-  krakend-designer:
-    image: devopsfaith/krakendesigner:latest
-    container_name: krakend-designer
-    ports:
-      - "8401:80"
-
   keycloak-db:
     image: postgres:latest
     container_name: keycloak-db
@@ -56,3 +41,23 @@ services:
       DB_PASSWORD: password
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
+
+  krakend:
+    image: devopsfaith/krakend:latest
+    container_name: krakend
+    command: run -d -c /etc/krakend/krakend.json
+    ports:
+      - "8402:8080"
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+      - "host.docker.external:192.168.1.70"
+    volumes:
+      - ./data/krakend:/etc/krakend
+    depends_on:
+      - keycloak
+
+  krakend-designer:
+    image: devopsfaith/krakendesigner:latest
+    container_name: krakend-designer
+    ports:
+      - "8401:80"

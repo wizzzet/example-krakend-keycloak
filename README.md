@@ -10,7 +10,7 @@ This weekend project was created to test out and offer a guide for the following
 
 ### Implementation details
 
-- the python service, by default runs on `localhost:8400` and krakend is configured to work with that. Inside the krakend container it's referred to through `host.docker.internal` to have access to the host port. Normally you'd want this on a virtual network and access it by container name, or ELB domain name, etc
+- the python service, by default runs on `localhost:8001` and krakend is configured to work with that. Inside the krakend container it's referred to through `host.docker.internal` to have access to the host port. Normally you'd want this on a virtual network and access it by container name, or ELB domain name, etc
 - the services generates some random data for a generic `/parent/[parent_id]` endpoint, `/sibling/[parent_id]` (stand-in for an auxiliary API that augments the `parent`) and `/children/[child_id]` (stand-in for a sub-resource of `parent`). There's also a `/parent/<parent_id>/children` endpoint that serves only the children of the specified parent
 - two endpoints are exposed via krakend (host `localhost:8402`):
   - `/mock/parents/<parent_id>` - composite API that serves the normal response of the `parent` endpoint for that id, merged with the equivalent `sibling` response and relative `children` response
@@ -47,7 +47,7 @@ pip install -r server/requirements.txt
 # run service
 python server/main.py
 ```
-The service should be available at http://0.0.0.0:8400 and exposes the following endpoints:
+The service should be available at http://0.0.0.0:8001 and exposes the following endpoints:
 ```
 /parents
 /parents/{parent_id}

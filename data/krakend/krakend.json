@@ -4,7 +4,7 @@
         "github_com/devopsfaith/krakend-gologging": {
             "level": "DEBUG",
             "prefix": "[KRAKEND]",
-            "syslog": false,
+            "syslog": true,
             "stdout": true,
             "format": "default"
         }
@@ -15,7 +15,8 @@
     "name": "Test Service",
     "endpoints": [
         {
-            "endpoint": "/mock/parents/{id}",
+            "endpoint": "/api/v1/yandex_geocode/geo/",
+            "querystring_params": ["*"],
             "method": "GET",
             "headers_to_pass": [
                 "Authorization"
@@ -23,8 +24,8 @@
             "extra_config": {
                 "github.com/devopsfaith/krakend-jose/validator": {
                     "alg": "RS256",
-                    "jwk-url": "http://host.docker.internal:8403/auth/realms/master/protocol/openid-connect/certs",
-                    "issuer": "http://localhost:8403/auth/realms/master",
+                    "jwk-url": "http://host.docker.internal:8403/auth/realms/test_realm/protocol/openid-connect/certs",
+                    "issuer": "http://localhost:8403/auth/realms/test_realm",
                     "disable_jwk_security": true
                 }
             },
@@ -32,58 +33,30 @@
             "concurrent_calls": 1,
             "backend": [
                 {
-                    "url_pattern": "/parents/{id}",
+                    "url_pattern": "/api/v1/yandex_geocode/geo/",
                     "encoding": "json",
                     "sd": "static",
+                    "is_collection": true,
                     "extra_config": {},
                     "host": [
-                        "host.docker.internal:8400"
+                        "host.docker.external:8001"
                     ],
                     "disable_host_sanitize": false,
                     "blacklist": [
                         "super_secret_field"
-                    ]
-                },
-                {
-                    "url_pattern": "/siblings/{id}",
-                    "encoding": "json",
-                    "sd": "static",
-                    "extra_config": {},
-                    "host": [
-                        "host.docker.internal:8400"
-                    ],
-                    "blacklist": [
-                        "sibling_id"
-                    ],
-                    "group": "extra_info",
-                    "disable_host_sanitize": false
-                },
-                {
-                    "url_pattern": "/parents/{id}/children",
-                    "encoding": "json",
-                    "sd": "static",
-                    "extra_config": {},
-                    "host": [
-                        "host.docker.internal:8400"
-                    ],
-                    "disable_host_sanitize": false,
-                    "mapping": {
-                        "content": "cars"
-                    },
-                    "whitelist": [
-                        "content"
                     ]
                 }
             ]
         },
         {
             "endpoint": "/mock/bogus-new-api/{path}",
+            "querystring_params": ["*"],
             "method": "GET",
             "extra_config": {
                 "github.com/devopsfaith/krakend-jose/validator": {
                     "alg": "RS256",
-                    "jwk-url": "http://host.docker.internal:8403/auth/realms/master/protocol/openid-connect/certs",
-                    "issuer": "http://localhost:8403/auth/realms/master",
+                    "jwk-url": "http://host.docker.internal:8403/auth/realms/test_realm/protocol/openid-connect/certs",
+                    "issuer": "http://localhost:8403/auth/realms/test_realm",
                     "disable_jwk_security": true
                 },
                 "github.com/devopsfaith/krakend/proxy": {
